@@ -1,3 +1,7 @@
 *.gch
 .git/
 run
+*.cmake
+Bin/
+CMakeFiles/
+CMakeCache.txt

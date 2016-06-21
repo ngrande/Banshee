@@ -1,16 +1,19 @@
-// "Copyright [2016] <Niclas Grande>"
+//
+// Copyright (c) 2016 by Niclas Grande. All Rights Reserved.
+//
+
 #include "MessageBus.h"
 #include <algorithm>
 
 MessageBus::MessageBus(void) {
   this->pStopped = false;
-  this->pMsgThread = thread(&MessageBus::processMsgQueue, this);
+  this->pMsgThread = std::thread(&MessageBus::processMsgQueue, this);
   this->pMsgThread.detach();
 }
 
 void MessageBus::processMsgQueue() {
   while (!pStopped) {
-    unique_lock<mutex> lck(cv_m);
+    std::unique_lock<std::mutex> lck(cv_m);
     cv.wait(lck);
 
     while (!this->pMsgQueue.empty()) {
@@ -22,13 +25,13 @@ void MessageBus::processMsgQueue() {
       switch (msgCode) {
       case Code::PLAY_SOUND:
         // handle play sound message
-        cout << "PLAY_SOUND message received!" << endl;
+        std::cout << "PLAY_SOUND message received!" << std::endl;
         break;
       case Code::STOP_SOUND:
-        cout << "STOP_SOUND message receieved!" << endl;
+        std::cout << "STOP_SOUND message receieved!" << std::endl;
         break;
       case Code::FLUSH_BUFFER:
-        cout << "FLUSH_BUFFER message received!" << endl;
+        std::cout << "FLUSH_BUFFER message received!" << std::endl;
         break;
       }
     }
