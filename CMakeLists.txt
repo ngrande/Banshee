@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5.2 FATAL_ERROR)
 project(Banshee)
 
 # The version number
