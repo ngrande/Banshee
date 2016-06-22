@@ -5,4 +5,4 @@ run
 Bin/
 CMakeFiles/
 CMakeCache.txt
-MakeFile
+Makefile
