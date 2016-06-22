@@ -8,24 +8,60 @@
 // is allocated BEFORE it is needed - at the start and not at run-time)
 #ifndef MEMORY_MEMORYPOOL_H_
 #define MEMORY_MEMORYPOOL_H_
+#define SIZE_OF_POOL 1000
 
-// just for fun -> Meta template programming
-template <typename T, T input, int n_pow> struct TO_POW_OF_TWO {
-  enum {
-    RESULT = (input % 2) ? input * input
-                         : input * TO_POW_OF_TWO<T, input, n_pow - 1>::RESULT
-  };
-};
+#include <cstddef>
+#include <vector>
+#include <exception>
 
-template <typename T, T input> struct TO_POW_OF_TWO<T, input, 0> {
-  enum { RESULT = 1 };
+class MemoryPoolNotBigEnoughException : public std::exception {
+  virtual const char *what() const throw() {
+    return "Size of memory pool was not big enough.";
+  }
 };
 
 class MemoryPool {
 private:
-  // int init_size = TO_POW_OF_TWO<2, 4>::RESULT;
-  int test = 2;
-  void doSomething();
+  struct MetaPool {
+    char *Pool;
+    // stores the bits of the pool's chunks
+    // first bit is the first chunk in the pool
+    // true => free
+    bool *Bitmap;
+  };
+  const int CACHE_LINE_SIZE = 64;
+  // real allocated memory = POOL_SIZE * CHUNK_SIZE  => x bytes
+  const int POOL_SIZE = SIZE_OF_POOL;
+  const int CHUNK_SIZE = CACHE_LINE_SIZE;
+  std::vector<MetaPool> MetaPools;
+  MemoryPool *pInstance;
+
+  // request first pool etc.
+  void requestFirstPool();
+  // request more pools if the current pool has not enough memory free for the
+  // requested object's size
+  void expandMetaPools();
+  // search for fitting free space and return address of this memory
+  void *getAvailableMemAddr(int size);
+
+public:
+  void *allocate(std::size_t size);
+  void free(void *pointer);
+  MemoryPool() { requestFirstPool(); }
+
+  // singleton
+  // lazy and guaranteed to be freed
+  static MemoryPool &getInstance() {
+    // => statics in a function begin to live when
+    // the program flow encounters the declaration
+    // and ends at program termination.
+    static MemoryPool instance;
+    return instance;
+  }
+
+  // delete dont wanted methods
+  MemoryPool(MemoryPool const &) = delete;
+  void operator=(MemoryPool const &) = delete;
 };
 
 #endif
