@@ -5,10 +5,9 @@ project(Banshee)
 SET(Banshee_VERSION_MAJOR 0)
 SET(Banshee_VERSION_MINOR_1)
 
-SET(CMAKE_CXX_COMPILER "/usr/bin/g++") # or gcc
+SET(CMAKE_CXX_COMPILER "g++") # or gcc
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wall") # -g
-# INCLUDE_DIRECTORIES(Memory)
-# INCLUDE_DIRECTORIES(Bus)
+# INCLUDE_DIRECTORIES(dir)
 
 SET(SOURCE_FILES main.cpp Memory/MemoryPool.cpp Memory/MemoryPool.h
                       Bus/MessageBus.cpp Bus/MessageBus.h
