@@ -13,5 +13,6 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wall") # -g
 SET(SOURCE_FILES main.cpp Memory/MemoryPool.cpp Memory/MemoryPool.h
                       Bus/MessageBus.cpp Bus/MessageBus.h
                       TMP/Helper.hpp)
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Bin")
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/Bin/Release")
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/Bin/Debug")
 ADD_EXECUTABLE(Banshee ${SOURCE_FILES})
